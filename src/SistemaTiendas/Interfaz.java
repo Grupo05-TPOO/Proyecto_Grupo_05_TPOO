@@ -47,7 +47,7 @@ public class Interfaz extends JFrame {
 
     public Interfaz() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 800, 600); // Aumenté el tamaño para acomodar las nuevas funcionalidades
+        setBounds(100, 100, 800, 600);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -58,7 +58,7 @@ public class Interfaz extends JFrame {
         lblRegistroDeProducto.setBounds(280, 10, 250, 31);
         contentPane.add(lblRegistroDeProducto);
 
-        // registro de productos
+       
         JLabel lblNewLabel = new JLabel("Nombre:");
         lblNewLabel.setBounds(10, 66, 77, 21);
         contentPane.add(lblNewLabel);
@@ -144,6 +144,50 @@ public class Interfaz extends JFrame {
             }
         });
 
+        
+        JButton btnBuscar = new JButton("🔍 Buscar");
+        btnBuscar.setBounds(150, 190, 120, 25);
+        contentPane.add(btnBuscar);
+
+        btnBuscar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String codigo = txtcodigo.getText().trim();
+
+                if (codigo.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Ingrese un código para buscar.");
+                    return;
+                }
+
+                boolean encontrado = false;
+                DefaultTableModel modeloFiltrado = new DefaultTableModel(
+                    new Object[][] {},
+                    new String[] {"Código", "Nombre", "Precio", "Stock", "Categoría"}
+                );
+
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    String codTabla = modelo.getValueAt(i, 0).toString();
+
+                    if (codTabla.equals(codigo)) {
+                        modeloFiltrado.addRow(new Object[] {
+                            modelo.getValueAt(i, 0),
+                            modelo.getValueAt(i, 1),
+                            modelo.getValueAt(i, 2),
+                            modelo.getValueAt(i, 3),
+                            modelo.getValueAt(i, 4)
+                        });
+                        encontrado = true;
+                        break;
+                    }
+                }
+
+                if (encontrado) {
+                    tabla.setModel(modeloFiltrado); 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Producto no encontrado.");
+                }
+            }
+        });
+
         tabla.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int fila = tabla.getSelectedRow();
@@ -157,7 +201,7 @@ public class Interfaz extends JFrame {
             }
         });
 
-        // ventas y descuentos
+        
         JLabel lblVentas = new JLabel("PROCESO DE VENTAS");
         lblVentas.setFont(new Font("Trebuchet MS", Font.BOLD, 14));
         lblVentas.setBounds(500, 40, 200, 21);
@@ -221,29 +265,39 @@ public class Interfaz extends JFrame {
     }
     
     private void guardarProducto() {
-        String nom = txtnom.getText();
-        String precio = txtprecio.getText();
-        String stock = txtstock.getText();
-        String codigo = txtcodigo.getText();
-        String categoria = txtcategoria.getSelectedItem().toString();
+    	 String nom = txtnom.getText();
+    	    String precio = txtprecio.getText();
+    	    String stock = txtstock.getText();
+    	    String codigo = txtcodigo.getText();
+    	    String categoria = txtcategoria.getSelectedItem().toString();
 
-        if(nom.isEmpty() || precio.isEmpty() || stock.isEmpty() || codigo.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Complete todos los campos por favor!!");
-            return;
-        } else {
-            try {
-                int c = Integer.parseInt(codigo);
-                double p = Double.parseDouble(precio);
-                int s = Integer.parseInt(stock);
+    	    if(nom.isEmpty() || precio.isEmpty() || stock.isEmpty() || codigo.isEmpty()) {
+    	        JOptionPane.showMessageDialog(null, "Complete todos los campos por favor!!");
+    	        return;
+    	    } else {
+    	        try {
+    	            int c = Integer.parseInt(codigo);
+    	            double p = Double.parseDouble(precio);
+    	            int s = Integer.parseInt(stock);
 
-                modelo.addRow(new Object[] {c, nom, p, s, categoria});
-                limpiarCampos();
-                JOptionPane.showMessageDialog(null, "Producto guardado correctamente!");
+    	            
+    	            if(p <= 0) {
+    	                JOptionPane.showMessageDialog(null, "El precio debe ser mayor a 0.");
+    	                return;
+    	            }
+    	            if(s < 0) {
+    	                JOptionPane.showMessageDialog(null, "El stock no puede ser negativo.");
+    	                return;
+    	            }
 
-            } catch(NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos");
-            }
-        }
+    	            modelo.addRow(new Object[] {c, nom, p, s, categoria});
+    	            limpiarCampos();
+    	            JOptionPane.showMessageDialog(null, "Producto guardado correctamente!");
+
+    	        } catch(NumberFormatException ex) {
+    	            JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos");
+    	        }
+    	    }
     }
     
     private void modificarProducto() {
@@ -322,11 +376,11 @@ public class Interfaz extends JFrame {
             double montoDescuento = subtotal * (descuento / 100);
             subtotal -= montoDescuento;
             
-            // actualizar stock
+            
             int nuevoStock = stockDisponible - cantidad;
             modelo.setValueAt(nuevoStock, fila, 3);
             
-            // agregar a la tabla de ventas
+            
             modeloVentas.addRow(new Object[] {
                 producto, 
                 cantidad, 
@@ -335,11 +389,11 @@ public class Interfaz extends JFrame {
                 String.format("$%.2f", subtotal)
             });
             
-            // limpiar campos de venta
+           
             txtCantidadVenta.setText("");
             txtDescuento.setText("");
             
-            // actualizar total
+            
             actualizarTotalVenta();
             
         } catch (NumberFormatException ex) {
@@ -371,7 +425,7 @@ public class Interfaz extends JFrame {
             total += Double.parseDouble(subtotalStr);
         }
         
-        // label dinamico 
+       
         for (java.awt.Component comp : contentPane.getComponents()) {
             if (comp instanceof JLabel) {
                 JLabel label = (JLabel) comp;
