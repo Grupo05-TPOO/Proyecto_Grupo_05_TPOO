@@ -58,7 +58,6 @@ public class Interfaz extends JFrame {
         lblRegistroDeProducto.setBounds(280, 10, 250, 31);
         contentPane.add(lblRegistroDeProducto);
 
-       
         JLabel lblNewLabel = new JLabel("Nombre:");
         lblNewLabel.setBounds(10, 66, 77, 21);
         contentPane.add(lblNewLabel);
@@ -92,7 +91,7 @@ public class Interfaz extends JFrame {
                 guardarProducto();
             }
         });
-        btnNewButton.setBounds(10, 143, 144, 43);
+        btnNewButton.setBounds(10, 128, 153, 43);
         contentPane.add(btnNewButton);
 
         JScrollPane scrollPane = new JScrollPane();
@@ -113,7 +112,7 @@ public class Interfaz extends JFrame {
                 modelo.setRowCount(0);
             }
         });
-        btnLimpiar.setBounds(331, 143, 125, 43);
+        btnLimpiar.setBounds(321, 150, 125, 43);
         contentPane.add(btnLimpiar);
 
         JLabel lblCodigo = new JLabel("Codigo:");
@@ -135,7 +134,7 @@ public class Interfaz extends JFrame {
         contentPane.add(txtcategoria);
 
         JButton btnModificar = new JButton("✏️ Modificar");
-        btnModificar.setBounds(181, 143, 125, 43);
+        btnModificar.setBounds(174, 128, 125, 43);
         contentPane.add(btnModificar);
 
         btnModificar.addActionListener(new ActionListener() {
@@ -145,6 +144,22 @@ public class Interfaz extends JFrame {
         });
 
         
+        JButton btnEliminar = new JButton("❌ Eliminar");
+        btnEliminar.setBounds(321, 97, 125, 43);
+        contentPane.add(btnEliminar);
+
+        btnEliminar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int fila = tabla.getSelectedRow();
+                if(fila == -1) {
+                    JOptionPane.showMessageDialog(null, "Seleccione un producto para eliminar.");
+                    return;
+                }
+                modelo.removeRow(fila);
+                JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.");
+            }
+        });
+
         JButton btnBuscar = new JButton("🔍 Buscar");
         btnBuscar.setBounds(150, 190, 120, 25);
         contentPane.add(btnBuscar);
@@ -201,7 +216,6 @@ public class Interfaz extends JFrame {
             }
         });
 
-        
         JLabel lblVentas = new JLabel("PROCESO DE VENTAS");
         lblVentas.setFont(new Font("Trebuchet MS", Font.BOLD, 14));
         lblVentas.setBounds(500, 40, 200, 21);
@@ -263,43 +277,43 @@ public class Interfaz extends JFrame {
         lblTotalVenta.setBounds(500, 370, 200, 21);
         contentPane.add(lblTotalVenta);
     }
-    
+
+    // ---------------- MÉTODOS -------------------
     private void guardarProducto() {
-    	 String nom = txtnom.getText();
-    	    String precio = txtprecio.getText();
-    	    String stock = txtstock.getText();
-    	    String codigo = txtcodigo.getText();
-    	    String categoria = txtcategoria.getSelectedItem().toString();
+        String nom = txtnom.getText();
+        String precio = txtprecio.getText();
+        String stock = txtstock.getText();
+        String codigo = txtcodigo.getText();
+        String categoria = txtcategoria.getSelectedItem().toString();
 
-    	    if(nom.isEmpty() || precio.isEmpty() || stock.isEmpty() || codigo.isEmpty()) {
-    	        JOptionPane.showMessageDialog(null, "Complete todos los campos por favor!!");
-    	        return;
-    	    } else {
-    	        try {
-    	            int c = Integer.parseInt(codigo);
-    	            double p = Double.parseDouble(precio);
-    	            int s = Integer.parseInt(stock);
+        if(nom.isEmpty() || precio.isEmpty() || stock.isEmpty() || codigo.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Complete todos los campos por favor!!");
+            return;
+        } else {
+            try {
+                int c = Integer.parseInt(codigo);
+                double p = Double.parseDouble(precio);
+                int s = Integer.parseInt(stock);
 
-    	            
-    	            if(p <= 0) {
-    	                JOptionPane.showMessageDialog(null, "El precio debe ser mayor a 0.");
-    	                return;
-    	            }
-    	            if(s < 0) {
-    	                JOptionPane.showMessageDialog(null, "El stock no puede ser negativo.");
-    	                return;
-    	            }
+                if(p <= 0) {
+                    JOptionPane.showMessageDialog(null, "El precio debe ser mayor a 0.");
+                    return;
+                }
+                if(s < 0) {
+                    JOptionPane.showMessageDialog(null, "El stock no puede ser negativo.");
+                    return;
+                }
 
-    	            modelo.addRow(new Object[] {c, nom, p, s, categoria});
-    	            limpiarCampos();
-    	            JOptionPane.showMessageDialog(null, "Producto guardado correctamente!");
+                modelo.addRow(new Object[] {c, nom, p, s, categoria});
+                limpiarCampos();
+                JOptionPane.showMessageDialog(null, "Producto guardado correctamente!");
 
-    	        } catch(NumberFormatException ex) {
-    	            JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos");
-    	        }
-    	    }
+            } catch(NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos");
+            }
+        }
     }
-    
+
     private void modificarProducto() {
         int fila = tabla.getSelectedRow();
         if (fila == -1) {
@@ -332,55 +346,53 @@ public class Interfaz extends JFrame {
             JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos.");
         }
     }
-    
+
     private void limpiarCampos() {
         txtcodigo.setText("");
         txtnom.setText("");
         txtprecio.setText("");
         txtstock.setText("");
     }
-    
+
     private void agregarVenta() {
         int fila = tabla.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(null, "Seleccione un producto de la tabla para vender.");
             return;
         }
-        
+
         String cantidadStr = txtCantidadVenta.getText();
         String descuentoStr = txtDescuento.getText();
-        
+
         if (cantidadStr.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Ingrese la cantidad a vender.");
             return;
         }
-        
+
         try {
             int cantidad = Integer.parseInt(cantidadStr);
             int stockDisponible = Integer.parseInt(modelo.getValueAt(fila, 3).toString());
-            
+
             if (cantidad > stockDisponible) {
                 JOptionPane.showMessageDialog(null, "No hay suficiente stock. Stock disponible: " + stockDisponible);
                 return;
             }
-            
+
             double descuento = descuentoStr.isEmpty() ? 0 : Double.parseDouble(descuentoStr);
             if (descuento < 0 || descuento > 100) {
                 JOptionPane.showMessageDialog(null, "El descuento debe estar entre 0 y 100%.");
                 return;
             }
-            
+
             String producto = modelo.getValueAt(fila, 1).toString();
             double precio = Double.parseDouble(modelo.getValueAt(fila, 2).toString());
             double subtotal = precio * cantidad;
             double montoDescuento = subtotal * (descuento / 100);
             subtotal -= montoDescuento;
-            
-            
+
             int nuevoStock = stockDisponible - cantidad;
             modelo.setValueAt(nuevoStock, fila, 3);
-            
-            
+
             modeloVentas.addRow(new Object[] {
                 producto, 
                 cantidad, 
@@ -388,44 +400,40 @@ public class Interfaz extends JFrame {
                 String.format("%.0f%%", descuento), 
                 String.format("$%.2f", subtotal)
             });
-            
-           
+
             txtCantidadVenta.setText("");
             txtDescuento.setText("");
-            
-            
             actualizarTotalVenta();
-            
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "La cantidad y el descuento deben ser números válidos.");
         }
     }
-    
+
     private void finalizarVenta() {
         if (modeloVentas.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "No hay productos en la venta.");
             return;
         }
-        
+
         double total = 0;
         for (int i = 0; i < modeloVentas.getRowCount(); i++) {
             String subtotalStr = modeloVentas.getValueAt(i, 4).toString().replace("$", "");
             total += Double.parseDouble(subtotalStr);
         }
-        
+
         JOptionPane.showMessageDialog(null, "Venta finalizada. Total: $" + String.format("%.2f", total));
         modeloVentas.setRowCount(0);
         actualizarTotalVenta();
     }
-    
+
     private void actualizarTotalVenta() {
         double total = 0;
         for (int i = 0; i < modeloVentas.getRowCount(); i++) {
             String subtotalStr = modeloVentas.getValueAt(i, 4).toString().replace("$", "");
             total += Double.parseDouble(subtotalStr);
         }
-        
-       
+
         for (java.awt.Component comp : contentPane.getComponents()) {
             if (comp instanceof JLabel) {
                 JLabel label = (JLabel) comp;
