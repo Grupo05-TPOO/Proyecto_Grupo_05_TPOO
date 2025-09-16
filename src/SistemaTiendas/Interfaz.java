@@ -286,7 +286,7 @@ public class Interfaz extends JFrame implements ActionListener {
     }
 
     
-    private void guardarProducto() {
+    	private void guardarProducto() {
         String nom = txtnom.getText();
         String precio = txtprecio.getText();
         String stock = txtstock.getText();
@@ -307,13 +307,13 @@ public class Interfaz extends JFrame implements ActionListener {
                     return;
                 }
                 if(s < 0) {
-                    JOptionPane.showMessageDialog(null, "El stock no puede ser negativo.");
+                    JOptionPane.showMessageDialog(null, "El stock no debe ser negativo.");
                     return;
                 }
 
                 modelo.addRow(new Object[] {c, nom, p, s, categoria});
                 limpiarCampos();
-                JOptionPane.showMessageDialog(null, "Producto guardado correctamente!");
+                JOptionPane.showMessageDialog(null, "Producto se guardado!");
 
             } catch(NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos");
