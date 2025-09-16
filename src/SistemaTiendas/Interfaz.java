@@ -153,11 +153,11 @@ public class Interfaz extends JFrame implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 int fila = tabla.getSelectedRow();
                 if(fila == -1) {
-                    JOptionPane.showMessageDialog(null, "Seleccione un producto para eliminar.");
+                    JOptionPane.showMessageDialog(null, "Seleccione un producto.");
                     return;
                 }
                 modelo.removeRow(fila);
-                JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.");
+                JOptionPane.showMessageDialog(null, "Producto eliminado!.");
             }
         });
 
