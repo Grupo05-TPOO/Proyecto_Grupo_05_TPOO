@@ -313,7 +313,7 @@ public class Interfaz extends JFrame implements ActionListener {
 
                 modelo.addRow(new Object[] {c, nom, p, s, categoria});
                 limpiarCampos();
-                JOptionPane.showMessageDialog(null, "Producto se guardado!");
+                JOptionPane.showMessageDialog(null, "Producto se guardado correctamente!");
 
             } catch(NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos");
