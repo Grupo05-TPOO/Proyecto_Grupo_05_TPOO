@@ -170,8 +170,9 @@ public class Interfaz extends JFrame implements ActionListener {
                 String codigo = txtcodigo.getText().trim();
 
                 if (codigo.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Ingrese un código para buscar.");
+                    JOptionPane.showMessageDialog(null, "Ingrese un código para la busqueda.");
                     return;
+             
                 }
 
                 boolean encontrado = false;
@@ -199,7 +200,7 @@ public class Interfaz extends JFrame implements ActionListener {
                 if (encontrado) {
                     tabla.setModel(modeloFiltrado); 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Producto no encontrado.");
+                    JOptionPane.showMessageDialog(null, "EL producto no fue encontrado.");
                 }
             }
         });
