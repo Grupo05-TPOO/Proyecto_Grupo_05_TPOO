@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class Interfaz extends JFrame {
+public class Interfaz extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -31,6 +31,7 @@ public class Interfaz extends JFrame {
     private JTable tablaVentas;
     private DefaultTableModel modelo;
     private DefaultTableModel modeloVentas;
+    private JButton btnAdicionar;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -91,7 +92,7 @@ public class Interfaz extends JFrame {
                 guardarProducto();
             }
         });
-        btnNewButton.setBounds(10, 128, 153, 43);
+        btnNewButton.setBounds(10, 128, 139, 31);
         contentPane.add(btnNewButton);
 
         JScrollPane scrollPane = new JScrollPane();
@@ -112,7 +113,7 @@ public class Interfaz extends JFrame {
                 modelo.setRowCount(0);
             }
         });
-        btnLimpiar.setBounds(321, 150, 125, 43);
+        btnLimpiar.setBounds(322, 169, 125, 32);
         contentPane.add(btnLimpiar);
 
         JLabel lblCodigo = new JLabel("Codigo:");
@@ -134,7 +135,7 @@ public class Interfaz extends JFrame {
         contentPane.add(txtcategoria);
 
         JButton btnModificar = new JButton("✏️ Modificar");
-        btnModificar.setBounds(174, 128, 125, 43);
+        btnModificar.setBounds(322, 128, 125, 31);
         contentPane.add(btnModificar);
 
         btnModificar.addActionListener(new ActionListener() {
@@ -145,7 +146,7 @@ public class Interfaz extends JFrame {
 
         
         JButton btnEliminar = new JButton("❌ Eliminar");
-        btnEliminar.setBounds(321, 97, 125, 43);
+        btnEliminar.setBounds(159, 168, 140, 31);
         contentPane.add(btnEliminar);
 
         btnEliminar.addActionListener(new ActionListener() {
@@ -161,7 +162,7 @@ public class Interfaz extends JFrame {
         });
 
         JButton btnBuscar = new JButton("🔍 Buscar");
-        btnBuscar.setBounds(150, 190, 120, 25);
+        btnBuscar.setBounds(10, 169, 139, 29);
         contentPane.add(btnBuscar);
 
         btnBuscar.addActionListener(new ActionListener() {
@@ -276,9 +277,14 @@ public class Interfaz extends JFrame {
         lblTotalVenta.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
         lblTotalVenta.setBounds(500, 370, 200, 21);
         contentPane.add(lblTotalVenta);
+        
+        btnAdicionar = new JButton("➕ Adicionar");
+        btnAdicionar.addActionListener(this);
+        btnAdicionar.setBounds(160, 129, 139, 29);
+        contentPane.add(btnAdicionar);
     }
 
-    // ---------------- MÉTODOS -------------------
+    
     private void guardarProducto() {
         String nom = txtnom.getText();
         String precio = txtprecio.getText();
@@ -444,4 +450,36 @@ public class Interfaz extends JFrame {
             }
         }
     }
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnAdicionar) {
+			do_btnAdicionar_actionPerformed(e);
+		}
+	}
+	
+	protected void do_btnAdicionar_actionPerformed(ActionEvent e) {
+		 String nom = txtnom.getText();
+		    String precio = txtprecio.getText();
+		    String stock = txtstock.getText();
+		    String codigo = txtcodigo.getText();
+		    String categoria = txtcategoria.getSelectedItem().toString();
+
+		    if (nom.isEmpty() || precio.isEmpty() || stock.isEmpty() || codigo.isEmpty()) {
+		        JOptionPane.showMessageDialog(null, "Complete todos los campos para adicionar.");
+		        return;
+		    }
+
+		    try {
+		        int c = Integer.parseInt(codigo);
+		        double p = Double.parseDouble(precio);
+		        int s = Integer.parseInt(stock);
+
+		        modelo.addRow(new Object[] {c, nom, p, s, categoria});
+		        limpiarCampos();
+		        JOptionPane.showMessageDialog(null, "Producto adicionado correctamente!");
+
+		    } catch (NumberFormatException ex) {
+		        JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos.");
+		    }
+	
+	}
 }
