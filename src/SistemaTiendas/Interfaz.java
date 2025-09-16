@@ -334,7 +334,7 @@ public class Interfaz extends JFrame implements ActionListener {
         String categoria = txtcategoria.getSelectedItem().toString();
 
         if (codigo.isEmpty() || nom.isEmpty() || precio.isEmpty() || stock.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Complete todos los campos antes de modificar.");
+            JOptionPane.showMessageDialog(null, "Complete los campos antes de modificar.");
             return;
         }
         try {
@@ -348,7 +348,7 @@ public class Interfaz extends JFrame implements ActionListener {
             modelo.setValueAt(s, fila, 3);
             modelo.setValueAt(categoria, fila, 4);
 
-            JOptionPane.showMessageDialog(null, "Producto modificado correctamente.");
+            JOptionPane.showMessageDialog(null, "Producto modificado.");
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos.");
         }
