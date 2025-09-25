@@ -302,7 +302,7 @@ public class Interfaz extends JFrame implements ActionListener {
                 double p = Double.parseDouble(precio);
                 int s = Integer.parseInt(stock);
 
-                if(p <= 0) {
+                if(p <= 0) {	
                     JOptionPane.showMessageDialog(null, "El precio debe ser mayor a 0.");
                     return;
                 }
@@ -320,7 +320,11 @@ public class Interfaz extends JFrame implements ActionListener {
             }
         }
     }
-
+     private void guardarProducto(String nom, double precio, int stock, int codigo, String categoria) {
+    	    modelo.addRow(new Object[] {codigo, nom, precio, stock, categoria});
+    	}
+     
+    	
     private void modificarProducto() {
         int fila = tabla.getSelectedRow();
         if (fila == -1) {
