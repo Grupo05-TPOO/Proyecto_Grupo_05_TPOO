@@ -357,6 +357,21 @@ public class Interfaz extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "El código, precio y stock deben ser números válidos.");
         }
     }
+    
+    private void modificarProducto(int codigo, String nuevoNombre, double nuevoPrecio, int nuevoStock, String nuevaCategoria) {
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            int codActual = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+            if (codActual == codigo) {
+                modelo.setValueAt(nuevoNombre, i, 1);
+                modelo.setValueAt(nuevoPrecio, i, 2);
+                modelo.setValueAt(nuevoStock, i, 3);
+                modelo.setValueAt(nuevaCategoria, i, 4);
+                JOptionPane.showMessageDialog(null, "Producto modificado por código.");
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Producto con código " + codigo + " no encontrado.");
+    }	
 
     private void limpiarCampos() {
         txtcodigo.setText("");
