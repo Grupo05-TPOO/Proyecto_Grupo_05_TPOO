@@ -156,53 +156,76 @@ public class Interfaz extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Seleccione un producto.");
                     return;
                 }
-                modelo.removeRow(fila);
-                JOptionPane.showMessageDialog(null, "Producto eliminado!.");
+                try {
+                    String nombreProducto = modelo.getValueAt(fila, 1).toString();
+                    int confirmacion = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Seguro que desea eliminar el producto: " + nombreProducto + "?",
+                        "Confirmación",
+                        JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (confirmacion == JOptionPane.YES_OPTION) {
+                        modelo.removeRow(fila);
+                        JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.");
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null,
+                        "Error al eliminar producto: " + ex.getMessage());
+                }
             }
         });
 
+        
+        
         JButton btnBuscar = new JButton("🔍 Buscar");
         btnBuscar.setBounds(10, 169, 139, 29);
         contentPane.add(btnBuscar);
 
         btnBuscar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String codigo = txtcodigo.getText().trim();
+            	public void actionPerformed(ActionEvent e) {
+          String codigo = txtcodigo.getText().trim();
+          try {
+        	  if (codigo.isEmpty()) {
+                  JOptionPane.showMessageDialog(null, "Ingrese un código para la busqueda.");
+                  return;
+           
+              }
 
-                if (codigo.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Ingrese un código para la busqueda.");
-                    return;
-             
-                }
+              boolean encontrado = false;
+              DefaultTableModel modeloFiltrado = new DefaultTableModel(
+                  new Object[][] {},
+                  new String[] {"Código", "Nombre", "Precio", "Stock", "Categoría"}
+              );
 
-                boolean encontrado = false;
-                DefaultTableModel modeloFiltrado = new DefaultTableModel(
-                    new Object[][] {},
-                    new String[] {"Código", "Nombre", "Precio", "Stock", "Categoría"}
-                );
+              for (int i = 0; i < modelo.getRowCount(); i++) {
+                  String codTabla = modelo.getValueAt(i, 0).toString();
 
-                for (int i = 0; i < modelo.getRowCount(); i++) {
-                    String codTabla = modelo.getValueAt(i, 0).toString();
+                  if (codTabla.equals(codigo)) {
+                      modeloFiltrado.addRow(new Object[] {
+                          modelo.getValueAt(i, 0),
+                          modelo.getValueAt(i, 1),
+                          modelo.getValueAt(i, 2),
+                          modelo.getValueAt(i, 3),
+                          modelo.getValueAt(i, 4)
+                      });
+                      encontrado = true;
+                      break;
+                  }
+              }
 
-                    if (codTabla.equals(codigo)) {
-                        modeloFiltrado.addRow(new Object[] {
-                            modelo.getValueAt(i, 0),
-                            modelo.getValueAt(i, 1),
-                            modelo.getValueAt(i, 2),
-                            modelo.getValueAt(i, 3),
-                            modelo.getValueAt(i, 4)
-                        });
-                        encontrado = true;
-                        break;
-                    }
-                }
-
-                if (encontrado) {
-                    tabla.setModel(modeloFiltrado); 
-                } else {
-                    JOptionPane.showMessageDialog(null, "EL producto no fue encontrado.");
-                }
-            }
+              if (encontrado) {
+                  tabla.setModel(modeloFiltrado); 
+              } else {
+                  JOptionPane.showMessageDialog(null, "EL producto no fue encontrado.");
+              }
+          
+       
+          }catch (Exception ex) {
+              JOptionPane.showMessageDialog(null, 
+                      "Ocurrió un error inesperado durante la búsqueda: " + ex.getMessage());
+              }
+            	}
         });
 
         tabla.addMouseListener(new java.awt.event.MouseAdapter() {
