@@ -447,20 +447,42 @@ public class Interfaz extends JFrame implements ActionListener {
     }
 
     private void finalizarVenta() {
-        if (modeloVentas.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "No hay productos en la venta.");
-            return;
-        }
+    	try {
+            if (modeloVentas.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No hay productos en la venta.");
+                return;
+            }
 
-        double total = 0;
-        for (int i = 0; i < modeloVentas.getRowCount(); i++) {
-            String subtotalStr = modeloVentas.getValueAt(i, 4).toString().replace("$", "");
-            total += Double.parseDouble(subtotalStr);
-        }
+            double total = 0;
+            for (int i = 0; i < modeloVentas.getRowCount(); i++) {
+                String subtotalStr = modeloVentas.getValueAt(i, 4).toString().replace("$", "").trim();
+                
+                if (subtotalStr.isEmpty()) {
+                    throw new NumberFormatException("El subtotal está vacío o es inválido.");
+                }
 
-        JOptionPane.showMessageDialog(null, "Venta finalizada. Total: $" + String.format("%.2f", total));
-        modeloVentas.setRowCount(0);
-        actualizarTotalVenta();
+                total += Double.parseDouble(subtotalStr);
+            }
+
+            JOptionPane.showMessageDialog(null, 
+                "Venta finalizada correctamente.\nTotal: $" + String.format("%.2f", total));
+            
+            modeloVentas.setRowCount(0); 
+            JOptionPane.showMessageDialog(null, "Gracias por su compra!");
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, 
+                "Error en los datos de la venta. Verifique los subtotales.");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, 
+                "Ocurrió un error inesperado al finalizar la venta: " + ex.getMessage());
+        }
+       
+
+    }
+    private void finalizarVenta(String Gracias_Por_la_Compra) {
+        finalizarVenta(); 
+        JOptionPane.showMessageDialog(null, Gracias_Por_la_Compra);
     }
 
     private void actualizarTotalVenta() {
