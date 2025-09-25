@@ -435,6 +435,16 @@ public class Interfaz extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "La cantidad y el descuento deben ser números válidos.");
         }
     }
+    
+    private void agregarVenta(String producto, int cantidad, double precio, double descuento) {
+        double subtotal = precio * cantidad;
+        subtotal -= subtotal * (descuento / 100);
+
+        modeloVentas.addRow(new Object[] {
+            producto, cantidad, String.format("$%.2f", precio),
+            String.format("%.0f%%", descuento), String.format("$%.2f", subtotal)
+        });
+    }
 
     private void finalizarVenta() {
         if (modeloVentas.getRowCount() == 0) {
