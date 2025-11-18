@@ -54,7 +54,7 @@ public String datosProducto() {
 }
 
 
-@Override
+
 public String toString() {
     return codigo + " - " + nombre + " (" + categoria + ")";
 }

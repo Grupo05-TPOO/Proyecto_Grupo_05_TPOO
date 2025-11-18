@@ -164,10 +164,10 @@
 	            p.agregarProducto(p1);
 	            p.cargarProductosDesdeArchivo(); 
 	            imprimir(); 
-	            JOptionPane.showMessageDialog(this, "✅ Producto guardado correctamente");
+	            JOptionPane.showMessageDialog(this, " Producto guardado correctamente");
 	            limpiarcampos();
 	        } else {
-	            JOptionPane.showMessageDialog(this, "⚠️ El producto con este código ya existe");
+	            JOptionPane.showMessageDialog(this, " El producto con este código ya existe");
 	        }
 	    }
 
