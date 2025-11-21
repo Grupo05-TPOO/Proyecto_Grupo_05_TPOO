@@ -20,6 +20,7 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 	private JButton btnRegistroProducto;
 	private JButton btnProcesoDeVenta;
 	private JButton btnSalir;
+	private JButton btnAutores;
 
 	/**
 	 * Launch the application.
@@ -72,9 +73,17 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 		btnSalir.addActionListener(this);
 		btnSalir.setBounds(185, 197, 186, 34);
 		contentPane.add(btnSalir);
+		
+		btnAutores = new JButton("Autores");
+		btnAutores.addActionListener(this);
+		btnAutores.setBounds(10, 288, 85, 21);
+		contentPane.add(btnAutores);
 
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnAutores) {
+			do_btnAutores_actionPerformed(e);
+		}
 		if (e.getSource() == btnProcesoDeVenta) {
 			do_btnProcesoDeVenta_actionPerformed(e);
 		}
@@ -96,5 +105,10 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 	protected void do_btnProcesoDeVenta_actionPerformed(ActionEvent e) {
 	ProcesoVenta PV = new ProcesoVenta();
 	PV.setVisible(true);
+	}
+	
+	protected void do_btnAutores_actionPerformed(ActionEvent e) {
+	Autores au = new Autores();
+	au.setVisible(true);
 	}
 }
