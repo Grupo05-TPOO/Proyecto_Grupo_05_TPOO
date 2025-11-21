@@ -11,38 +11,24 @@ public Venta(int cantidad, Producto producto, double descuento) {
 	this.producto = producto;
 	this.descuento = descuento;
 }
-
-
 public int getCantidad() {
 	return cantidad;
 }
-
-
 public void setCantidad(int cantidad) {
 	this.cantidad = cantidad;
 }
-
-
 public Producto getProducto() {
 	return producto;
 }
-
-
 public void setProducto(Producto producto) {
 	this.producto = producto;
 }
-
-
 public double getDescuento() {
 	return descuento;
 }
-
-
 public void setDescuento(double descuento) {
 	this.descuento = descuento;
 }
-
-
 public double calcularSubtotal() {
     double subtotal = producto.getPrecio() * cantidad;
     return subtotal - (subtotal * descuento / 100);

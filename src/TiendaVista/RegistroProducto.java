@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -24,21 +25,18 @@ public class RegistroProducto extends JDialog implements ActionListener {
     private DefaultTableModel modeloTabla;
     private JComboBox<String> txtcat;
 
-    private DAO_Producto dao = new DAO_Producto();
+    private JButton btnGuardarProducto;
+    private JButton btnBuscarProducto;
+    private JButton btnModificarProducto;
+    private JButton btnEliminarProducto;
+    private JButton btnExportarProducto;
 
-    public static void main(String[] args) {
-        try {
-            RegistroProducto dialog = new RegistroProducto();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    private DAO_Producto dao = new DAO_Producto();
 
     public RegistroProducto() {
         setTitle("Registro de Producto");
         setBounds(100, 100, 620, 500);
+        setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -90,27 +88,27 @@ public class RegistroProducto extends JDialog implements ActionListener {
         txtcat.setBounds(296, 110, 86, 21);
         contentPanel.add(txtcat);
 
-        JButton btnGuardarProducto = new JButton("Guardar Producto");
+        btnGuardarProducto = new JButton("Guardar Producto");
         btnGuardarProducto.addActionListener(this);
         btnGuardarProducto.setBounds(26, 191, 153, 29);
         contentPanel.add(btnGuardarProducto);
 
-        JButton btnBuscarProducto = new JButton("Buscar Producto");
+        btnBuscarProducto = new JButton("Buscar Producto");
         btnBuscarProducto.addActionListener(this);
         btnBuscarProducto.setBounds(216, 191, 153, 29);
         contentPanel.add(btnBuscarProducto);
 
-        JButton btnModificarProducto = new JButton("Modificar Producto");
+        btnModificarProducto = new JButton("Modificar Producto");
         btnModificarProducto.addActionListener(this);
         btnModificarProducto.setBounds(26, 235, 153, 29);
         contentPanel.add(btnModificarProducto);
 
-        JButton btnEliminarProducto = new JButton("Eliminar Producto");
+        btnEliminarProducto = new JButton("Eliminar Producto");
         btnEliminarProducto.addActionListener(this);
         btnEliminarProducto.setBounds(216, 235, 153, 29);
         contentPanel.add(btnEliminarProducto);
 
-        JButton btnExportarProducto = new JButton("Exportar Producto");
+        btnExportarProducto = new JButton("Exportar Producto");
         btnExportarProducto.addActionListener(this);
         btnExportarProducto.setBounds(415, 72, 153, 29);
         contentPanel.add(btnExportarProducto);
@@ -132,68 +130,48 @@ public class RegistroProducto extends JDialog implements ActionListener {
         imprimir();
     }
 
+
     public void actionPerformed(ActionEvent e) {
-        String cmd = ((JButton) e.getSource()).getText();
-
-        switch (cmd) {
-            case "Guardar Producto":
-                guardarProducto();
-                break;
-            case "Buscar Producto":
-                buscarProducto();
-                break;
-            case "Modificar Producto":
-                modificarProducto();
-                break;
-            case "Eliminar Producto":
-                eliminarProducto();
-                break;
-            case "Exportar Producto":
-                exportarProducto();
-                break;
+        if (e.getSource() == btnGuardarProducto) {
+            do_btnGuardarProducto_actionPerformed(e);
+        }
+        if (e.getSource() == btnBuscarProducto) {
+            do_btnBuscarProducto_actionPerformed(e);
+        }
+        if (e.getSource() == btnModificarProducto) {
+            do_btnModificarProducto_actionPerformed(e);
+        }
+        if (e.getSource() == btnEliminarProducto) {
+            do_btnEliminarProducto_actionPerformed(e);
+        }
+        if (e.getSource() == btnExportarProducto) {
+            do_btnExportarProducto_actionPerformed(e);
         }
     }
 
-    // ================= VALIDACIONES =================
 
-    private boolean existeNombre(String nombre) {
-        for (Producto p : dao.listarProductos()) {
-            if (p.getNombre().equalsIgnoreCase(nombre.trim())) {
-                return true;
-            }
-        }
-        return false;
-    }
+    protected void do_btnGuardarProducto_actionPerformed(ActionEvent e) {
 
-    // ================= ACCIONES =================
-
-    private void guardarProducto() {
-
-        // Validar campos
         if (txtcod.getText().isEmpty() || txtnom.getText().isEmpty() ||
-            txtprecio.getText().isEmpty() || txtstock.getText().isEmpty()) {
+            txtprecio.getText().isEmpty() || txtstock.getText().isEmpty()) 
+        {
             JOptionPane.showMessageDialog(this, "Completa todos los campos.");
             return;
         }
-
-        // Validar negativos
         if (leerprecio() < 0) {
             JOptionPane.showMessageDialog(this, "El precio no puede ser negativo.");
             return;
         }
-
         if (leerstock() < 0) {
             JOptionPane.showMessageDialog(this, "El stock no puede ser negativo.");
             return;
         }
-
-        // validar nombre repetido
-        if (existeNombre(leernombre())) {
-            JOptionPane.showMessageDialog(this, "Ya existe un producto con este nombre.");
-            return;
+        for (Producto p : dao.listarProductos()) {
+            if (p.getNombre().equalsIgnoreCase(leernombre())) {
+                JOptionPane.showMessageDialog(this, "Ya existe un producto con este nombre.");
+                return;
+            }
         }
-
-        // Validar código repetido
         Producto pro = dao.buscarProducto(leercod());
         if (pro == null) {
 
@@ -208,20 +186,25 @@ public class RegistroProducto extends JDialog implements ActionListener {
         }
     }
 
-    private void buscarProducto() {
+    protected void do_btnBuscarProducto_actionPerformed(ActionEvent e) {
+
         Producto pro = dao.buscarProducto(leercod());
+
         if (pro != null) {
             txtnom.setText(pro.getNombre());
             txtprecio.setText(String.valueOf(pro.getPrecio()));
             txtstock.setText(String.valueOf(pro.getStock()));
             txtcat.setSelectedItem(pro.getCategoria());
+            
+            imprimirProducto(pro);
+
             JOptionPane.showMessageDialog(this, "Producto encontrado");
         } else {
             JOptionPane.showMessageDialog(this, "Producto no encontrado");
         }
     }
 
-    private void modificarProducto() {
+    protected void do_btnModificarProducto_actionPerformed(ActionEvent e) {
 
         if (leerprecio() < 0) {
             JOptionPane.showMessageDialog(this, "El precio no puede ser negativo.");
@@ -236,9 +219,13 @@ public class RegistroProducto extends JDialog implements ActionListener {
         Producto pro = dao.buscarProducto(leercod());
         if (pro != null) {
 
-            if(!pro.getNombre().equalsIgnoreCase(leernombre()) && existeNombre(leernombre())){
-                JOptionPane.showMessageDialog(this, "Ya existe otro producto con este nombre.");
-                return;
+            if(!pro.getNombre().equalsIgnoreCase(leernombre())) {
+                for (Producto p : dao.listarProductos()) {
+                    if (p.getNombre().equalsIgnoreCase(leernombre())) {
+                        JOptionPane.showMessageDialog(this, "Ya existe otro producto con este nombre.");
+                        return;
+                    }
+                }
             }
 
             pro.setNombre(leernombre());
@@ -246,9 +233,9 @@ public class RegistroProducto extends JDialog implements ActionListener {
             pro.setStock(leerstock());
             pro.setCategoria(leercategoria());
             dao.modificarProducto(pro);
-
             imprimir();
             limpiarcampos();
+
             JOptionPane.showMessageDialog(this, "Producto modificado correctamente");
 
         } else {
@@ -256,8 +243,10 @@ public class RegistroProducto extends JDialog implements ActionListener {
         }
     }
 
-    private void eliminarProducto() {
+    protected void do_btnEliminarProducto_actionPerformed(ActionEvent e) {
+
         Producto pro = dao.buscarProducto(leercod());
+
         if (pro != null) {
             dao.eliminarProducto(leercod());
             imprimir();
@@ -268,11 +257,10 @@ public class RegistroProducto extends JDialog implements ActionListener {
         }
     }
 
-    private void exportarProducto() {
+    protected void do_btnExportarProducto_actionPerformed(ActionEvent e) {
         Exportar.exportarProductos(dao.listarProductos());
     }
 
-    // ================= LECTURAS =================
 
     int leercod() {
         return Integer.parseInt(txtcod.getText());
@@ -310,4 +298,13 @@ public class RegistroProducto extends JDialog implements ActionListener {
         txtstock.setText("");
         txtcat.setSelectedIndex(0);
     }
+    
+    void imprimirProducto(Producto p ) {
+    	modeloTabla.setRowCount(0);
+    	modeloTabla.addRow(new Object[] {
+    			p.getCodigo(), p.getNombre(), p.getPrecio(), p.getStock(), p.getCategoria()   
+    			
+    			}); 
+    }
 }
+

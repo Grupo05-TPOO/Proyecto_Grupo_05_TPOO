@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -18,19 +19,20 @@ public class ProcesoVenta extends JDialog implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
-
     private JTextField txtCodigo, txtNombre, txtPrecio, txtStock, txtCantidad, txtDescuento;
-
     private JTable table;
     private DefaultTableModel modeloTabla;
-
-
+    private JButton btnBuscar;
+    private JButton btnAgregarVenta;
+    private JButton btnFinalizarVenta;
+    private JButton btnExportarVentas;
     private DAO_Producto daoP = new DAO_Producto();
     private DAO_Venta daoV = new DAO_Venta();
 
     public ProcesoVenta() {
         setTitle("Proceso de Venta");
         setBounds(100, 100, 600, 650);
+        setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -49,9 +51,9 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         txtCodigo.setBounds(90, 57, 100, 19);
         contentPanel.add(txtCodigo);
 
-        JButton btnBuscar = new JButton("Buscar");
-        btnBuscar.setBounds(210, 56, 90, 22);
+        btnBuscar = new JButton("Buscar");
         btnBuscar.addActionListener(this);
+        btnBuscar.setBounds(210, 56, 90, 22);
         contentPanel.add(btnBuscar);
 
         JLabel lblNombre = new JLabel("Nombre:");
@@ -97,22 +99,21 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         txtDescuento.setBounds(90, 257, 100, 19);
         contentPanel.add(txtDescuento);
 
-        JButton btnAgregar = new JButton("Agregar Venta");
-        btnAgregar.setBounds(210, 217, 150, 30);
-        btnAgregar.addActionListener(this);
-        contentPanel.add(btnAgregar);
+        btnAgregarVenta = new JButton("Agregar Venta");
+        btnAgregarVenta.addActionListener(this);
+        btnAgregarVenta.setBounds(210, 217, 150, 30);
+        contentPanel.add(btnAgregarVenta);
 
-        JButton btnFinalizar = new JButton("Finalizar Venta");
-        btnFinalizar.setBounds(210, 257, 150, 30);
-        btnFinalizar.addActionListener(this);
-        contentPanel.add(btnFinalizar);
+        btnFinalizarVenta = new JButton("Finalizar Venta");
+        btnFinalizarVenta.addActionListener(this);
+        btnFinalizarVenta.setBounds(210, 257, 150, 30);
+        contentPanel.add(btnFinalizarVenta);
 
-        JButton btnExportar = new JButton("Exportar Ventas");
-        btnExportar.setBounds(380, 217, 150, 30);
-        btnExportar.addActionListener(this);
-        contentPanel.add(btnExportar);
+        btnExportarVentas = new JButton("Exportar Ventas");
+        btnExportarVentas.addActionListener(this);
+        btnExportarVentas.setBounds(380, 217, 150, 30);
+        contentPanel.add(btnExportarVentas);
 
-        // TABLA
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(25, 330, 530, 230);
         contentPanel.add(scrollPane);
@@ -129,19 +130,22 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         scrollPane.setViewportView(table);
     }
 
-
     public void actionPerformed(ActionEvent e) {
-        String cmd = ((JButton)e.getSource()).getText();
-
-        switch (cmd) {
-            case "Buscar": buscarProducto(); break;
-            case "Agregar Venta": agregarVenta(); break;
-            case "Finalizar Venta": finalizarVenta(); break;
-            case "Exportar Ventas": exportarVentas(); break;
+        if (e.getSource() == btnBuscar) {
+            do_btnBuscar_actionPerformed(e);
+        }
+        if (e.getSource() == btnAgregarVenta) {
+            do_btnAgregarVenta_actionPerformed(e);
+        }
+        if (e.getSource() == btnFinalizarVenta) {
+            do_btnFinalizarVenta_actionPerformed(e);
+        }
+        if (e.getSource() == btnExportarVentas) {
+            do_btnExportarVentas_actionPerformed(e);
         }
     }
+    protected void do_btnBuscar_actionPerformed(ActionEvent e) {
 
-    private void buscarProducto() {
         try {
             int codigo = Integer.parseInt(txtCodigo.getText().trim());
             Producto p = daoP.buscarProducto(codigo);
@@ -160,25 +164,20 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         }
     }
 
-    private void agregarVenta() {
+    protected void do_btnAgregarVenta_actionPerformed(ActionEvent e) {
+
         try {
             int cod = Integer.parseInt(txtCodigo.getText());
             int cant = Integer.parseInt(txtCantidad.getText());
             double desc = Double.parseDouble(txtDescuento.getText());
 
-            // VALIDACIONES NUEVAS
             if (cant <= 0) {
                 JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
                 return;
             }
 
-            if (desc < 0) {
-                JOptionPane.showMessageDialog(this, "El descuento no puede ser negativo");
-                return;
-            }
-
-            if (desc > 100) {
-                JOptionPane.showMessageDialog(this, "El descuento no puede ser mayor a 100%");
+            if (desc < 0 || desc > 100) {
+                JOptionPane.showMessageDialog(this, "Descuento inválido");
                 return;
             }
 
@@ -212,7 +211,8 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         }
     }
 
-    private void finalizarVenta() {
+    protected void do_btnFinalizarVenta_actionPerformed(ActionEvent e) {
+
         double total = 0;
 
         for (int i = 0; i < modeloTabla.getRowCount(); i++) {
@@ -224,7 +224,8 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         modeloTabla.setRowCount(0);
     }
 
-    private void exportarVentas() {
+    protected void do_btnExportarVentas_actionPerformed(ActionEvent e) {
+
         if (modeloTabla.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "No hay ventas para exportar");
             return;
@@ -234,17 +235,17 @@ public class ProcesoVenta extends JDialog implements ActionListener {
 
         for (int i = 0; i < modeloTabla.getRowCount(); i++) {
             Producto p = new Producto(
-                    Integer.parseInt(modeloTabla.getValueAt(i, 0).toString()),
-                    modeloTabla.getValueAt(i, 1).toString(),
-                    Double.parseDouble(modeloTabla.getValueAt(i, 2).toString()),
-                    0,
-                    ""
+                Integer.parseInt(modeloTabla.getValueAt(i, 0).toString()),
+                modeloTabla.getValueAt(i, 1).toString(),
+                Double.parseDouble(modeloTabla.getValueAt(i, 2).toString()),
+                0,
+                ""
             );
 
             Venta v = new Venta(
-                    Integer.parseInt(modeloTabla.getValueAt(i, 3).toString()),
-                    p,
-                    Double.parseDouble(modeloTabla.getValueAt(i, 4).toString())
+                Integer.parseInt(modeloTabla.getValueAt(i, 3).toString()),
+                p,
+                Double.parseDouble(modeloTabla.getValueAt(i, 4).toString())
             );
 
             lista.add(v);
@@ -252,5 +253,6 @@ public class ProcesoVenta extends JDialog implements ActionListener {
 
         Exportar.exportarVentas(lista);
     }
+
 }
 
