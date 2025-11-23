@@ -153,8 +153,7 @@ public class RegistroProducto extends JDialog implements ActionListener {
     protected void do_btnGuardarProducto_actionPerformed(ActionEvent e) {
 
         if (txtcod.getText().isEmpty() || txtnom.getText().isEmpty() ||
-            txtprecio.getText().isEmpty() || txtstock.getText().isEmpty()) 
-        {
+            txtprecio.getText().isEmpty() || txtstock.getText().isEmpty())  {
             JOptionPane.showMessageDialog(this, "Completa todos los campos.");
             return;
         }

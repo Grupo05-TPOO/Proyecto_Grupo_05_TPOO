@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,21 +20,30 @@ public class ProcesoVenta extends JDialog implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
-    private JTextField txtCodigo, txtNombre, txtPrecio, txtStock, txtCantidad, txtDescuento;
+
+    private JComboBox<String> cbCategoria;
+    private JComboBox<String> cbProducto;
+
+    private JTextField txtNombre, txtPrecio, txtStock, txtCantidad, txtDescuento;
+
     private JTable table;
     private DefaultTableModel modeloTabla;
-    private JButton btnBuscar;
+
     private JButton btnAgregarVenta;
     private JButton btnFinalizarVenta;
     private JButton btnExportarVentas;
+
     private DAO_Producto daoP = new DAO_Producto();
     private DAO_Venta daoV = new DAO_Venta();
+    private JButton btnReporteSemanal;
 
     public ProcesoVenta() {
+
         setTitle("Proceso de Venta");
         setBounds(100, 100, 600, 650);
         setLocationRelativeTo(null);
         getContentPane().setLayout(new BorderLayout());
+
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
@@ -43,79 +53,86 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         lblTitulo.setBounds(180, 10, 250, 30);
         contentPanel.add(lblTitulo);
 
-        JLabel lblCodigo = new JLabel("Código:");
-        lblCodigo.setBounds(25, 60, 60, 13);
-        contentPanel.add(lblCodigo);
+        JLabel lblCategoria = new JLabel("Categoría:");
+        lblCategoria.setBounds(25, 60, 90, 20);
+        contentPanel.add(lblCategoria);
 
-        txtCodigo = new JTextField();
-        txtCodigo.setBounds(90, 57, 100, 19);
-        contentPanel.add(txtCodigo);
+        cbCategoria = new JComboBox<>();
+        cbCategoria.setModel(new DefaultComboBoxModel(new String[] {"Gaseosas", "Bebidas ", "Snacks", "Dulces"}));
+        cbCategoria.setBounds(120, 57, 150, 25);
 
-        btnBuscar = new JButton("Buscar");
-        btnBuscar.addActionListener(this);
-        btnBuscar.setBounds(210, 56, 90, 22);
-        contentPanel.add(btnBuscar);
+        cbCategoria.addActionListener(this);
+        contentPanel.add(cbCategoria);
+
+        JLabel lblProducto = new JLabel("Producto:");
+        lblProducto.setBounds(25, 100, 90, 20);
+        contentPanel.add(lblProducto);
+
+        cbProducto = new JComboBox<>();
+        cbProducto.setBounds(120, 97, 150, 25);
+        cbProducto.addActionListener(this);
+        contentPanel.add(cbProducto);
 
         JLabel lblNombre = new JLabel("Nombre:");
-        lblNombre.setBounds(25, 100, 60, 13);
+        lblNombre.setBounds(25, 140, 60, 13);
         contentPanel.add(lblNombre);
 
         txtNombre = new JTextField();
-        txtNombre.setBounds(90, 97, 100, 19);
+        txtNombre.setBounds(90, 137, 100, 19);
         txtNombre.setEditable(false);
         contentPanel.add(txtNombre);
 
         JLabel lblPrecio = new JLabel("Precio:");
-        lblPrecio.setBounds(25, 140, 60, 13);
+        lblPrecio.setBounds(25, 180, 60, 13);
         contentPanel.add(lblPrecio);
 
         txtPrecio = new JTextField();
-        txtPrecio.setBounds(90, 137, 100, 19);
+        txtPrecio.setBounds(90, 177, 100, 19);
         txtPrecio.setEditable(false);
         contentPanel.add(txtPrecio);
 
         JLabel lblStock = new JLabel("Stock:");
-        lblStock.setBounds(25, 180, 60, 13);
+        lblStock.setBounds(25, 220, 60, 13);
         contentPanel.add(lblStock);
 
         txtStock = new JTextField();
-        txtStock.setBounds(90, 177, 100, 19);
+        txtStock.setBounds(90, 217, 100, 19);
         txtStock.setEditable(false);
         contentPanel.add(txtStock);
 
         JLabel lblCantidad = new JLabel("Cantidad:");
-        lblCantidad.setBounds(25, 220, 60, 13);
+        lblCantidad.setBounds(25, 260, 60, 13);
         contentPanel.add(lblCantidad);
 
         txtCantidad = new JTextField();
-        txtCantidad.setBounds(90, 217, 100, 19);
+        txtCantidad.setBounds(90, 257, 100, 19);
         contentPanel.add(txtCantidad);
 
         JLabel lblDescuento = new JLabel("Descuento:");
-        lblDescuento.setBounds(25, 260, 80, 13);
+        lblDescuento.setBounds(25, 300, 80, 13);
         contentPanel.add(lblDescuento);
 
         txtDescuento = new JTextField();
-        txtDescuento.setBounds(90, 257, 100, 19);
+        txtDescuento.setBounds(90, 297, 100, 19);
         contentPanel.add(txtDescuento);
 
         btnAgregarVenta = new JButton("Agregar Venta");
         btnAgregarVenta.addActionListener(this);
-        btnAgregarVenta.setBounds(210, 217, 150, 30);
+        btnAgregarVenta.setBounds(210, 257, 150, 30);
         contentPanel.add(btnAgregarVenta);
 
         btnFinalizarVenta = new JButton("Finalizar Venta");
         btnFinalizarVenta.addActionListener(this);
-        btnFinalizarVenta.setBounds(210, 257, 150, 30);
+        btnFinalizarVenta.setBounds(210, 297, 150, 30);
         contentPanel.add(btnFinalizarVenta);
 
         btnExportarVentas = new JButton("Exportar Ventas");
         btnExportarVentas.addActionListener(this);
-        btnExportarVentas.setBounds(380, 217, 150, 30);
+        btnExportarVentas.setBounds(380, 257, 150, 30);
         contentPanel.add(btnExportarVentas);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(25, 330, 530, 230);
+        scrollPane.setBounds(25, 360, 530, 230);
         contentPanel.add(scrollPane);
 
         modeloTabla = new DefaultTableModel();
@@ -128,12 +145,32 @@ public class ProcesoVenta extends JDialog implements ActionListener {
 
         table = new JTable(modeloTabla);
         scrollPane.setViewportView(table);
+        
+        btnReporteSemanal = new JButton("Reporte Semanal");
+        btnReporteSemanal.addActionListener(this);
+        btnReporteSemanal.setBounds(380, 296, 150, 30);
+        contentPanel.add(btnReporteSemanal);
     }
 
+    
+    @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnBuscar) {
-            do_btnBuscar_actionPerformed(e);
+    	if (e.getSource() == btnReporteSemanal) {
+    		do_btnReporteSemanal_actionPerformed(e);
+    	}
+
+        if (e.getSource() == cbCategoria) {
+            if (cbCategoria.getSelectedItem() != null) {
+                cargarProductosPorCategoria(cbCategoria.getSelectedItem().toString());
+            }
         }
+
+        if (e.getSource() == cbProducto) {
+            if (cbProducto.getSelectedItem() != null) {
+                cargarDatosProducto(cbProducto.getSelectedItem().toString());
+            }
+        }
+
         if (e.getSource() == btnAgregarVenta) {
             do_btnAgregarVenta_actionPerformed(e);
         }
@@ -144,30 +181,46 @@ public class ProcesoVenta extends JDialog implements ActionListener {
             do_btnExportarVentas_actionPerformed(e);
         }
     }
-    protected void do_btnBuscar_actionPerformed(ActionEvent e) {
 
-        try {
-            int codigo = Integer.parseInt(txtCodigo.getText().trim());
-            Producto p = daoP.buscarProducto(codigo);
 
-            if (p == null) {
-                JOptionPane.showMessageDialog(this, "Producto no encontrado");
-                return;
+    private void cargarProductosPorCategoria(String categoria) {
+
+        cbProducto.removeAllItems();
+
+        for (Producto p : daoP.listarProductos()) {
+            if (p.getCategoria().equalsIgnoreCase(categoria)) {
+                cbProducto.addItem(p.getNombre());
             }
+        }
+    }
 
-            txtNombre.setText(p.getNombre());
-            txtPrecio.setText(String.valueOf(p.getPrecio()));
-            txtStock.setText(String.valueOf(p.getStock()));
 
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Código inválido");
+    private void cargarDatosProducto(String nombreProducto) {
+
+        for (Producto p : daoP.listarProductos()) {
+
+            if (p.getNombre().equalsIgnoreCase(nombreProducto)) {
+
+                txtNombre.setText(p.getNombre());
+                txtPrecio.setText(String.valueOf(p.getPrecio()));
+                txtStock.setText(String.valueOf(p.getStock()));
+                break;
+                
+            }
         }
     }
 
     protected void do_btnAgregarVenta_actionPerformed(ActionEvent e) {
 
         try {
-            int cod = Integer.parseInt(txtCodigo.getText());
+
+            String nombre = txtNombre.getText();
+
+            if (nombre.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Seleccione un producto.");
+                return;
+            }
+
             int cant = Integer.parseInt(txtCantidad.getText());
             double desc = Double.parseDouble(txtDescuento.getText());
 
@@ -181,10 +234,16 @@ public class ProcesoVenta extends JDialog implements ActionListener {
                 return;
             }
 
-            Producto p = daoP.buscarProducto(cod);
+            Producto p = null;
+            for (Producto x : daoP.listarProductos()) {
+                if (x.getNombre().equalsIgnoreCase(nombre)) {
+                    p = x;
+                    break;
+                }
+            }
 
             if (p == null) {
-                JOptionPane.showMessageDialog(this, "Busque primero un producto válido");
+                JOptionPane.showMessageDialog(this, "Producto no existente.");
                 return;
             }
 
@@ -196,7 +255,7 @@ public class ProcesoVenta extends JDialog implements ActionListener {
             Venta v = new Venta(cant, p, desc);
 
             daoV.insertarVenta(v);
-            daoV.actualizarStock(cod, p.getStock() - cant);
+            daoV.actualizarStock(p.getCodigo(), p.getStock() - cant);
 
             modeloTabla.addRow(new Object[]{
                 p.getCodigo(), p.getNombre(), p.getPrecio(), cant, desc, v.calcularSubtotal()
@@ -211,18 +270,28 @@ public class ProcesoVenta extends JDialog implements ActionListener {
         }
     }
 
+
     protected void do_btnFinalizarVenta_actionPerformed(ActionEvent e) {
 
-        double total = 0;
+    	 if (modeloTabla.getRowCount() == 0) {
+    	        JOptionPane.showMessageDialog(this, "No hay productos en la venta.");
+    	        return;
+    	    }
 
-        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-            total += Double.parseDouble(modeloTabla.getValueAt(i, 5).toString());
-        }
+    	    double total = 0;
 
-        JOptionPane.showMessageDialog(this, "Venta finalizada.\nTotal vendido: S/ " + total);
+    	    for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+    	        total += Double.parseDouble(modeloTabla.getValueAt(i, 5).toString());
+    	    }
 
-        modeloTabla.setRowCount(0);
+    	    Exportar.generarBoletaTXT(modeloTabla, total);
+
+    	    JOptionPane.showMessageDialog(this, "Venta finalizada.\nTotal vendido: S/ " + total);
+
+    	    modeloTabla.setRowCount(0);
+        
     }
+
 
     protected void do_btnExportarVentas_actionPerformed(ActionEvent e) {
 
@@ -253,6 +322,14 @@ public class ProcesoVenta extends JDialog implements ActionListener {
 
         Exportar.exportarVentas(lista);
     }
+	protected void do_btnReporteSemanal_actionPerformed(ActionEvent e) {
+		ArrayList<DAO_Venta.VentaSemanal> lista = daoV.listarVentasSemanales();
 
+	    if (lista.isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "No hay ventas registradas esta semana.");
+	        return;
+	    }
+
+	    Exportar.exportarReporteSemanalTXT(lista);
+	}
 }
-

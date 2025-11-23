@@ -2,6 +2,7 @@ package Métodos;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import Conexion.ConexionBD;
@@ -37,5 +38,38 @@ public class DAO_Venta {
             System.out.println("Error al actualizar stock: " + e);
         }
     }
+ public static class VentaSemanal{
+	 public String producto;
+	 public int cantidad;
+	 public double precio, subtotal;
+	 public java.sql.Timestamp fecha;
+	 public VentaSemanal(String producto, int cantidad, double precio, double subtotal, Timestamp fecha) {
+		super();
+		this.producto = producto;
+		this.cantidad = cantidad;
+		this.precio = precio;
+		this.subtotal = subtotal;
+		this.fecha = fecha;
+	 }
+ }
+ public ArrayList<VentaSemanal> listarVentasSemanales() {
+     ArrayList<VentaSemanal> lista = new ArrayList<>();
+
+     try {
+         CallableStatement cs = ConexionBD.getConnexion().prepareCall("{call sp_reporteSemanal()}");
+         ResultSet rs = cs.executeQuery();
+
+         while (rs.next()) {
+             lista.add(new VentaSemanal(
+                     rs.getString("producto"), rs.getInt("cantidad"), rs.getDouble("precio"), rs.getDouble("subtotal"), rs.getTimestamp("fecha")
+             ));
+         }
+
+     } catch (Exception e) {
+         System.out.println("Error reporte semanal: " + e);
+     }
+
+     return lista;
+ }
 
 }

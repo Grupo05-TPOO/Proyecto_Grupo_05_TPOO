@@ -22,24 +22,6 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 	private JButton btnSalir;
 	private JButton btnAutores;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MenúPrincipal frame = new MenúPrincipal();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		
-	}
-	
 	
 
 	/**
