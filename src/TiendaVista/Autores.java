@@ -33,7 +33,7 @@ public class Autores extends JDialog {
 
     public Autores() {
         setTitle("Autores del Proyecto");
-        setBounds(100, 100, 489, 308);
+        setBounds(100, 100, 527, 360);
         getContentPane().setLayout(new BorderLayout());
 
 
@@ -43,20 +43,20 @@ public class Autores extends JDialog {
 
 
         lblFoto = new JLabel("");
-        lblFoto.setBounds(29, 23, 164, 190);
+        lblFoto.setBounds(29, 23, 206, 246);
         lblFoto.setHorizontalAlignment(SwingConstants.CENTER);
         contentPanel.add(lblFoto);
 
         lblNombre = new JLabel("");
         lblNombre.setFont(new Font("Arial", Font.BOLD, 22));
         lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNombre.setBounds(142, 60, 300, 30);
+        lblNombre.setBounds(203, 60, 300, 30);
         contentPanel.add(lblNombre);
 
         lblRol = new JLabel("");
         lblRol.setFont(new Font("Arial", Font.PLAIN, 17));
         lblRol.setHorizontalAlignment(SwingConstants.CENTER);
-        lblRol.setBounds(142, 100, 300, 30);
+        lblRol.setBounds(203, 100, 300, 30);
         contentPanel.add(lblRol);
 
        

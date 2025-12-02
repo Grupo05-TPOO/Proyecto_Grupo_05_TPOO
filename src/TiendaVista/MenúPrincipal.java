@@ -21,6 +21,8 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 	private JButton btnProcesoDeVenta;
 	private JButton btnSalir;
 	private JButton btnAutores;
+	private JButton btnRegistrodeProveedor;
+	private JButton btnRegistroDeProducto;
 
 	
 
@@ -30,7 +32,7 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 	public MenúPrincipal() {
 		setTitle("Menú");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 555, 370);
+		setBounds(100, 100, 555, 419);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -38,31 +40,47 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 		
 		lblNewLabel = new JLabel("Sistema Gestión de Tienda");
 		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		lblNewLabel.setBounds(138, 59, 287, 24);
+		lblNewLabel.setBounds(139, 40, 287, 24);
 		contentPane.add(lblNewLabel);
 		
 		btnRegistroProducto = new JButton("Registro de Producto 💾");
 		btnRegistroProducto.addActionListener(this);
-		btnRegistroProducto.setBounds(185, 104, 186, 34);
+		btnRegistroProducto.setBounds(185, 89, 186, 34);
 		contentPane.add(btnRegistroProducto);
 		
 		btnProcesoDeVenta = new JButton("Proceso de Venta 💸");
 		btnProcesoDeVenta.addActionListener(this);
-		btnProcesoDeVenta.setBounds(185, 150, 186, 34);
+		btnProcesoDeVenta.setBounds(185, 217, 186, 34);
 		contentPane.add(btnProcesoDeVenta);
 		
 		btnSalir = new JButton("Salir 🚪");
 		btnSalir.addActionListener(this);
-		btnSalir.setBounds(185, 197, 186, 34);
+		btnSalir.setBounds(185, 305, 186, 34);
 		contentPane.add(btnSalir);
 		
 		btnAutores = new JButton("Autores");
 		btnAutores.addActionListener(this);
-		btnAutores.setBounds(10, 288, 85, 21);
+		btnAutores.setBounds(185, 261, 186, 34);
 		contentPane.add(btnAutores);
+		
+		btnRegistrodeProveedor = new JButton("Registro de Proveedor");
+		btnRegistrodeProveedor.addActionListener(this);
+		btnRegistrodeProveedor.setBounds(185, 133, 186, 34);
+		contentPane.add(btnRegistrodeProveedor);
+		
+		btnRegistroDeProducto = new JButton("Registro de Producto Proveedor");
+		btnRegistroDeProducto.addActionListener(this);
+		btnRegistroDeProducto.setBounds(185, 173, 186, 34);
+		contentPane.add(btnRegistroDeProducto);
 
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegistroDeProducto) {
+			do_btnRegistroDeProducto_actionPerformed(e);
+		}
+		if (e.getSource() == btnRegistrodeProveedor) {
+			do_btnRegistrodeProveedor_actionPerformed(e);
+		}
 		if (e.getSource() == btnAutores) {
 			do_btnAutores_actionPerformed(e);
 		}
@@ -92,5 +110,13 @@ public class MenúPrincipal extends JFrame implements ActionListener {
 	protected void do_btnAutores_actionPerformed(ActionEvent e) {
 	Autores au = new Autores();
 	au.setVisible(true);
+	}
+	protected void do_btnRegistrodeProveedor_actionPerformed(ActionEvent e) {
+		RegistroProveedor RP = new RegistroProveedor();
+		RP.setVisible(true);
+	}
+	protected void do_btnRegistroDeProducto_actionPerformed(ActionEvent e) {
+		RegistroProductoProveedor RPP = new RegistroProductoProveedor();
+		RPP.setVisible(true);
 	}
 }

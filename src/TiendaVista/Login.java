@@ -1,6 +1,10 @@
 package TiendaVista;
 
 import javax.swing.*;
+
+import Modelo.Usuario;
+import Métodos.DAO_Usuario;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +16,7 @@ public class Login extends JFrame implements ActionListener {
     private JButton btnIngresar;
 
     private int intentos = 0; 
+    private DAO_Usuario daoUsuario = new DAO_Usuario();
 
     public Login() {
 
@@ -54,14 +59,14 @@ public class Login extends JFrame implements ActionListener {
         String usuario = txtUsuario.getText().trim();
         String contra = String.valueOf(txtContra.getPassword()).trim();
 
-        if (usuario.equals("Tia Felicita") && contra.equals("998454266")) {
+        Usuario u = daoUsuario.validarLogin(usuario, contra);
 
-            JOptionPane.showMessageDialog(this, "Bienvenido " + usuario);
+        if (u != null) { 
 
+            JOptionPane.showMessageDialog(this, "Bienvenido " + u.getNombreCompleto() + "\n(Rol: " + u.getRol() + ")");
             MenúPrincipal menu = new MenúPrincipal();
             menu.setVisible(true);
-
-            dispose(); 
+            dispose();
             return;
         }
 
